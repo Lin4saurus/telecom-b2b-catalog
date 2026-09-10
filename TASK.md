@@ -4,6 +4,7 @@
 > Marcadores: [ ] no empezado · [>] en progreso / parcial · [x] completo y verificado
 
 ## 🕒 Bitácora (lo último primero)
+- 2026-09-10 — M2 completado: Header (logo tipográfico + SVG propio, nav Inicio/Catálogo/Contacto, menú móvil), Footer (nombre, rubro, año dinámico) y Hero (título/subtítulo/CTA a /catalog) aplicados en app/layout.tsx a todo el sitio. Paleta azul corporativo sobre fondo claro (se quitó el modo oscuro automático para mantener la identidad consistente). Verificado con `npm run build` (compila sin errores) y `npm run dev` + petición HTTP a localhost:3000 confirmando que el HTML renderizado contiene el logo, los 3 enlaces de navegación, el título del hero con "GPON"/"fibra" y el footer con el año actual.
 - 2026-09-09 — Proyecto Next.js creado, subido a GitHub y desplegado en Vercel. Sistema de milestones configurado.
 
 ## 🔄 Protocolo de actualización (para el agente)
@@ -22,11 +23,11 @@ Cada vez que avances:
 - [ ] Proyecto creado en Supabase, claves en .env.local (pendiente, se hará en M5)
 Verificación: la URL de Vercel abre sin errores.
 
-### M2 — Layout e identidad  [ ]
-- [ ] Header y footer
-- [ ] Hero de la home
-- [ ] Identidad de Telesev Group (logo/nombre, colores)
-Verificación: la home se ve completa y responsive.
+### M2 — Layout e identidad  [x]
+- [x] Header y footer
+- [x] Hero de la home
+- [x] Identidad de Telesev Group (logo/nombre, colores)
+Verificación: build de producción sin errores (`npm run build`) y home renderizada en `npm run dev` contiene logo, nav completo, hero y footer con año dinámico. Revisado en el HTML servido; no se probó manualmente en distintos anchos de pantalla en un navegador real (recomiendo que la usuaria lo confirme visualmente en local: `npm run dev` → http://localhost:3000, redimensionando la ventana).
 
 ### M3 — Catálogo de productos  [ ]
 - [ ] Tarjetas de producto/servicio con navegación
