@@ -5,6 +5,6 @@
 ▲ Next.js 16.3.4 (Turbopack)
 - Local:         http://localhost:3001
 - Network:       http://192.168.0.169:3001
-✓ Ready in 1162ms
-✓ Running next.config.ts took 68ms
+✓ Ready in 938ms
+✓ Running next.config.ts took 52ms
 [?25h
