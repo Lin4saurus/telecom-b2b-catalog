@@ -57,6 +57,13 @@ export default async function ProductPage({
 
       <p className="mt-4 text-lg text-slate-600">{product.shortDescription}</p>
 
+      <Link
+        href={`/quote?product=${product.id}`}
+        className="mt-6 inline-flex items-center justify-center rounded-md bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-800"
+      >
+        Solicitar cotización
+      </Link>
+
       <div className="mt-10 rounded-lg border border-slate-200 bg-white p-6 sm:p-8">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
           Ficha técnica
