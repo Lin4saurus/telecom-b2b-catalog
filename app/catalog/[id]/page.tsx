@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { products } from "@/data/products";
+import { getProductById } from "@/lib/products";
 
-export function generateStaticParams() {
-  return products.map((product) => ({ id: product.id }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: PageProps<"/catalog/[id]">): Promise<Metadata> {
   const { id } = await params;
-  const product = products.find((item) => item.id === id);
+  const { product } = await getProductById(id);
 
   if (!product) {
     return { title: "Producto no encontrado | Telesev Group" };
@@ -27,7 +25,7 @@ export default async function ProductPage({
   params,
 }: PageProps<"/catalog/[id]">) {
   const { id } = await params;
-  const product = products.find((item) => item.id === id);
+  const { product } = await getProductById(id);
 
   if (!product) {
     notFound();

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { products } from "@/data/products";
 import { QuoteForm } from "../components/QuoteForm";
 
@@ -22,7 +23,16 @@ export default async function QuotePage({
 
   return (
     <section className="mx-auto w-full max-w-2xl px-4 py-16 sm:px-6">
-      <div className="mb-10">
+      <Link
+        href={initialProduct ? `/catalog/${initialProduct.id}` : "/catalog"}
+        className="inline-flex items-center gap-1 text-sm font-medium text-blue-700 hover:text-blue-800"
+      >
+        {initialProduct
+          ? `← Volver a ${initialProduct.name}`
+          : "← Volver al catálogo"}
+      </Link>
+
+      <div className="mb-10 mt-6">
         <span className="rounded-full bg-blue-100 px-4 py-1 text-sm font-medium text-blue-700">
           Cotización
         </span>

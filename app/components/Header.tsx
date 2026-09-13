@@ -1,13 +1,23 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/catalog", label: "Catálogo" },
+  { href: "/about", label: "Nosotros" },
+  { href: "/industries", label: "Industrias" },
   { href: "/contact", label: "Contacto" },
 ];
+
+function isLinkActive(pathname: string, href: string) {
+  if (href === "/") {
+    return pathname === "/";
+  }
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 function TelesevLogo() {
   return (
@@ -42,6 +52,7 @@ function TelesevLogo() {
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
@@ -57,21 +68,27 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 sm:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-blue-700"
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav className="hidden items-center gap-6 md:flex">
+          {navLinks.map((link) => {
+            const active = isLinkActive(pathname, link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={`text-sm font-medium transition-colors hover:text-blue-700 ${
+                  active ? "text-blue-700" : "text-slate-600"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <button
           type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-md text-slate-700 sm:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-md text-slate-700 md:hidden"
           aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={isMenuOpen}
           onClick={() => setIsMenuOpen((open) => !open)}
@@ -105,18 +122,24 @@ export function Header() {
       </div>
 
       {isMenuOpen && (
-        <nav className="border-t border-slate-200 bg-white sm:hidden">
+        <nav className="border-t border-slate-200 bg-white md:hidden">
           <div className="flex flex-col gap-1 px-4 py-3">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-700"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const active = isLinkActive(pathname, link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={active ? "page" : undefined}
+                  className={`rounded-md px-3 py-2 text-sm font-medium hover:bg-blue-50 hover:text-blue-700 ${
+                    active ? "bg-blue-50 text-blue-700" : "text-slate-700"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
         </nav>
       )}

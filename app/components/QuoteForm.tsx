@@ -221,7 +221,7 @@ export function QuoteForm({ initialProduct }: QuoteFormProps) {
           onChange={handleChange("quantity")}
           disabled={isSubmitting}
           aria-invalid={Boolean(errors.quantity)}
-          className="rounded-md border border-slate-300 px-4 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 disabled:bg-slate-50"
+          className="rounded-md border border-slate-300 px-4 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 disabled:bg-slate-50 sm:max-w-[160px]"
         />
         {errors.quantity && (
           <p className="text-sm text-red-600">{errors.quantity}</p>
@@ -249,7 +249,7 @@ export function QuoteForm({ initialProduct }: QuoteFormProps) {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="inline-flex items-center justify-center rounded-md bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-blue-300"
+        className="inline-flex w-full items-center justify-center rounded-md bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-blue-300"
       >
         {isSubmitting ? "Enviando..." : "Solicitar cotización"}
       </button>

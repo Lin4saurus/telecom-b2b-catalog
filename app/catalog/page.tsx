@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { products } from "@/data/products";
+import { getProducts } from "@/lib/products";
 import { CatalogView } from "../components/CatalogView";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Catálogo | Telesev Group",
@@ -8,7 +10,9 @@ export const metadata: Metadata = {
     "Explorá el catálogo de productos y soluciones de Telesev Group: equipamiento GPON, redes ópticas y fibra óptica de Kontron, Iskratel y C-Data.",
 };
 
-export default function CatalogPage() {
+export default async function CatalogPage() {
+  const { products, error } = await getProducts();
+
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
       <div className="mb-10 max-w-2xl">
@@ -24,7 +28,14 @@ export default function CatalogPage() {
         </p>
       </div>
 
-      <CatalogView products={products} />
+      {error ? (
+        <p className="rounded-md bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          No pudimos cargar el catálogo. Probá recargar la página en unos
+          minutos.
+        </p>
+      ) : (
+        <CatalogView products={products} />
+      )}
     </section>
   );
 }
