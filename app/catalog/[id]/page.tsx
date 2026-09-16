@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProductById } from "@/lib/products";
+import { ProductImage } from "../../components/ProductImage";
 
 export const dynamic = "force-dynamic";
 
@@ -40,13 +41,24 @@ export default async function ProductPage({
         ← Volver al catálogo
       </Link>
 
+      <ProductImage
+        src={product.image}
+        alt={product.name}
+        className="mt-6 aspect-[16/9] w-full rounded-lg bg-slate-100"
+      />
+
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
           {product.brand}
         </span>
-        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
-          {product.technology}
-        </span>
+        {product.technologies.map((technology) => (
+          <span
+            key={technology}
+            className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600"
+          >
+            {technology}
+          </span>
+        ))}
       </div>
 
       <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -67,7 +79,7 @@ export default async function ProductPage({
           Ficha técnica
         </h2>
         <p className="mt-3 leading-relaxed text-slate-700">
-          {product.technicalDescription}
+          {product.description}
         </p>
       </div>
     </section>

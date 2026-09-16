@@ -2,10 +2,11 @@
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { supabase } from "@/lib/supabase";
-import { products, type Product } from "@/data/products";
+import type { Product } from "@/data/products";
 
 type QuoteFormProps = {
   initialProduct: Product | null;
+  products: Product[];
 };
 
 type FormValues = {
@@ -53,7 +54,7 @@ function validate(values: FormValues): FormErrors {
   return errors;
 }
 
-export function QuoteForm({ initialProduct }: QuoteFormProps) {
+export function QuoteForm({ initialProduct, products }: QuoteFormProps) {
   const [values, setValues] = useState<FormValues>(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<Status>("idle");
@@ -119,7 +120,7 @@ export function QuoteForm({ initialProduct }: QuoteFormProps) {
             {initialProduct.name}
           </p>
           <p className="text-xs text-slate-600">
-            {initialProduct.brand} · {initialProduct.technology}
+            {initialProduct.brand} · {initialProduct.technologies.join(", ")}
           </p>
         </div>
       ) : (

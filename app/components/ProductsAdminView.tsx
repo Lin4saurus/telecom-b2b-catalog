@@ -175,7 +175,7 @@ export function ProductsAdminView() {
                           {product.brand}
                         </td>
                         <td className="px-4 py-3 text-slate-600">
-                          {product.technology}
+                          {product.technologies.join(", ")}
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">

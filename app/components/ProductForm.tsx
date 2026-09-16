@@ -41,9 +41,9 @@ function getInitialValues(initialProduct?: Product): FormValues {
       id: initialProduct.id,
       name: initialProduct.name,
       brand: initialProduct.brand,
-      technology: initialProduct.technology,
+      technology: initialProduct.technologies[0] ?? technologies[0],
       shortDescription: initialProduct.shortDescription,
-      technicalDescription: initialProduct.technicalDescription,
+      technicalDescription: initialProduct.description,
     };
   }
 
@@ -135,7 +135,7 @@ export function ProductForm({ mode, initialProduct }: ProductFormProps) {
       brand: values.brand,
       technology: values.technology,
       shortDescription: values.shortDescription.trim(),
-      technicalDescription: values.technicalDescription.trim(),
+      description: values.technicalDescription.trim(),
     };
 
     // mode === "edit" siempre viene acompañado de initialProduct (así se

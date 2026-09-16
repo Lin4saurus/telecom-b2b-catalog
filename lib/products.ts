@@ -1,13 +1,27 @@
 import { supabase } from "@/lib/supabase";
-import type { Product } from "@/data/products";
+import type { Product, ProductDocument } from "@/data/products";
 
 type ProductRow = {
   id: string;
   name: string;
+  slug: string;
   brand: string;
-  technology: string;
+  sku: string | null;
+  category: string;
+  subcategory: string | null;
+  technologies: string[] | null;
+  applications: string[] | null;
+  status: string;
+  badge: string | null;
+  image: string | null;
+  gallery: string[] | null;
   short_description: string;
-  technical_description: string;
+  description: string;
+  highlights: string[] | null;
+  specifications: Record<string, string> | null;
+  documents: ProductDocument[] | null;
+  related_product_ids: string[] | null;
+  price_label: string | null;
 };
 
 export type ProductInput = {
@@ -16,31 +30,51 @@ export type ProductInput = {
   brand: string;
   technology: string;
   shortDescription: string;
-  technicalDescription: string;
+  description: string;
 };
 
 const PRODUCT_COLUMNS =
-  "id, name, brand, technology, short_description, technical_description";
+  "id, name, slug, brand, sku, category, subcategory, technologies, applications, status, badge, image, gallery, short_description, description, highlights, specifications, documents, related_product_ids, price_label";
 
 function mapRow(row: ProductRow): Product {
   return {
     id: row.id,
     name: row.name,
+    slug: row.slug,
     brand: row.brand as Product["brand"],
-    technology: row.technology as Product["technology"],
+    sku: row.sku ?? undefined,
+    category: row.category as Product["category"],
+    subcategory: row.subcategory ?? undefined,
+    technologies: (row.technologies ?? []) as Product["technologies"],
+    applications: row.applications ?? [],
+    status: row.status as Product["status"],
+    badge: (row.badge as Product["badge"]) ?? undefined,
+    image: row.image ?? undefined,
+    gallery: row.gallery ?? undefined,
     shortDescription: row.short_description,
-    technicalDescription: row.technical_description,
+    description: row.description,
+    highlights: row.highlights ?? [],
+    specifications: row.specifications ?? {},
+    documents: row.documents ?? undefined,
+    relatedProductIds: row.related_product_ids ?? undefined,
+    priceLabel: row.price_label ?? undefined,
   };
 }
 
+// El admin todavía crea/edita productos con el formulario simple (M16): un
+// solo id/nombre/marca/tecnología y dos descripciones. Los campos nuevos del
+// modelo ampliado (sku, category, specifications, etc.) no los completa ese
+// formulario todavía, así que acá solo mandamos lo que sí sabemos; el resto
+// de las columnas usa sus valores por defecto en la base (ver SQL del M22).
 function toRow(input: ProductInput) {
   return {
     id: input.id,
+    slug: input.id,
     name: input.name,
     brand: input.brand,
-    technology: input.technology,
+    technologies: [input.technology],
     short_description: input.shortDescription,
-    technical_description: input.technicalDescription,
+    description: input.description,
   };
 }
 

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { products } from "@/data/products";
+import { getProductById, getProducts } from "@/lib/products";
 import { QuoteForm } from "../components/QuoteForm";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Solicitar cotización | Telesev Group",
@@ -17,9 +19,13 @@ export default async function QuotePage({
   const productId = Array.isArray(productParam)
     ? productParam[0]
     : productParam;
-  const initialProduct = productId
-    ? (products.find((product) => product.id === productId) ?? null)
-    : null;
+
+  const [{ product: initialProduct }, { products }] = await Promise.all([
+    productId
+      ? getProductById(productId)
+      : Promise.resolve({ product: null, error: false }),
+    getProducts(),
+  ]);
 
   return (
     <section className="mx-auto w-full max-w-2xl px-4 py-16 sm:px-6">
@@ -46,7 +52,7 @@ export default async function QuotePage({
         </p>
       </div>
 
-      <QuoteForm initialProduct={initialProduct} />
+      <QuoteForm initialProduct={initialProduct} products={products} />
     </section>
   );
 }
