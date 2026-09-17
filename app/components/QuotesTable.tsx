@@ -9,18 +9,47 @@ import {
 import { SearchInput } from "./SearchInput";
 import { Pagination } from "./Pagination";
 
+export type QuoteItemSummary = {
+  productName: string;
+  quantity: number;
+};
+
 export type QuoteRow = {
   id: string;
   created_at: string;
   name: string;
   email: string;
   company: string | null;
+  phone: string | null;
+  country: string | null;
+  city: string | null;
+  project_type: string | null;
   product_id: string | null;
   product_name: string | null;
   quantity: number | null;
   details: string | null;
   status: QuoteStatus;
+  items: QuoteItemSummary[];
 };
+
+function formatProducts(row: QuoteRow) {
+  if (row.items.length > 0) {
+    return row.items
+      .map((item) => `${item.quantity}× ${item.productName}`)
+      .join(", ");
+  }
+  if (row.product_name) {
+    return row.quantity
+      ? `${row.quantity}× ${row.product_name}`
+      : row.product_name;
+  }
+  return "Cotización general";
+}
+
+function formatLocation(row: QuoteRow) {
+  const parts = [row.city, row.country].filter(Boolean);
+  return parts.length > 0 ? parts.join(", ") : "—";
+}
 
 type QuotesTableProps = {
   status: "loading" | "success" | "error";
@@ -63,7 +92,10 @@ export function QuotesTable({
         row.name.toLowerCase().includes(term) ||
         row.email.toLowerCase().includes(term) ||
         (row.company ?? "").toLowerCase().includes(term) ||
-        (row.product_name ?? "").toLowerCase().includes(term)
+        (row.product_name ?? "").toLowerCase().includes(term) ||
+        row.items.some((item) =>
+          item.productName.toLowerCase().includes(term)
+        )
     );
   }, [rows, searchTerm]);
 
@@ -140,10 +172,12 @@ export function QuotesTable({
                   <th className="px-4 py-3">Fecha</th>
                   <th className="px-4 py-3">Nombre</th>
                   <th className="px-4 py-3">Email</th>
+                  <th className="px-4 py-3">Teléfono</th>
                   <th className="px-4 py-3">Empresa</th>
-                  <th className="px-4 py-3">Producto</th>
-                  <th className="px-4 py-3">Cantidad</th>
-                  <th className="px-4 py-3">Detalles</th>
+                  <th className="px-4 py-3">Ubicación</th>
+                  <th className="px-4 py-3">Tipo de proyecto</th>
+                  <th className="px-4 py-3">Productos</th>
+                  <th className="px-4 py-3">Mensaje</th>
                   <th className="px-4 py-3">Estado</th>
                 </tr>
               </thead>
@@ -158,15 +192,21 @@ export function QuotesTable({
                     </td>
                     <td className="px-4 py-3 text-slate-600">{row.email}</td>
                     <td className="px-4 py-3 text-slate-600">
+                      {row.phone || "—"}
+                    </td>
+                    <td className="px-4 py-3 text-slate-600">
                       {row.company || "—"}
                     </td>
                     <td className="px-4 py-3 text-slate-600">
-                      {row.product_name || "Cotización general"}
+                      {formatLocation(row)}
                     </td>
                     <td className="px-4 py-3 text-slate-600">
-                      {row.quantity ?? "—"}
+                      {row.project_type || "—"}
                     </td>
-                    <td className="px-4 py-3 text-slate-600">
+                    <td className="max-w-xs px-4 py-3 text-slate-600">
+                      {formatProducts(row)}
+                    </td>
+                    <td className="max-w-xs px-4 py-3 text-slate-600">
                       {row.details || "—"}
                     </td>
                     <td className="px-4 py-3">

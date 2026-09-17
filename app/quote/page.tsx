@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getProductById, getProducts } from "@/lib/products";
+import { getProductById } from "@/lib/products";
 import { QuoteForm } from "../components/QuoteForm";
 
 export const dynamic = "force-dynamic";
@@ -20,15 +20,12 @@ export default async function QuotePage({
     ? productParam[0]
     : productParam;
 
-  const [{ product: initialProduct }, { products }] = await Promise.all([
-    productId
-      ? getProductById(productId)
-      : Promise.resolve({ product: null, error: false }),
-    getProducts(),
-  ]);
+  const { product: initialProduct } = productId
+    ? await getProductById(productId)
+    : { product: null };
 
   return (
-    <section className="mx-auto w-full max-w-2xl px-4 py-16 sm:px-6">
+    <section className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6">
       <Link
         href={initialProduct ? `/catalog/${initialProduct.id}` : "/catalog"}
         className="inline-flex items-center gap-1 text-sm font-medium text-blue-700 hover:text-blue-800"
@@ -52,7 +49,7 @@ export default async function QuotePage({
         </p>
       </div>
 
-      <QuoteForm initialProduct={initialProduct} products={products} />
+      <QuoteForm initialProduct={initialProduct} />
     </section>
   );
 }

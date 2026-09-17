@@ -3,17 +3,18 @@ import type { Product } from "@/data/products";
 import { ProductImage } from "./ProductImage";
 import { ProductBadge } from "./ProductBadge";
 import { ProductAvailability } from "./ProductAvailability";
+import { AddToQuoteButton } from "./AddToQuoteButton";
 
 export function ProductCard({ product }: { product: Product }) {
   const highlights = product.highlights.slice(0, 4);
 
   return (
-    <div className="group flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
       <div className="relative">
         {product.badge && (
           <ProductBadge
             badge={product.badge}
-            className="absolute left-3 top-3 z-10"
+            className="pointer-events-none absolute left-3 top-3 z-10"
           />
         )}
         <ProductImage
@@ -38,7 +39,12 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
 
         <h3 className="mt-1 line-clamp-2 text-base font-semibold text-slate-900">
-          {product.name}
+          <Link
+            href={`/catalog/${product.id}`}
+            className="text-inherit no-underline after:absolute after:inset-0"
+          >
+            {product.name}
+          </Link>
         </h3>
 
         <p className="mt-2 line-clamp-2 text-sm text-slate-600">
@@ -69,21 +75,17 @@ export function ProductCard({ product }: { product: Product }) {
           </span>
         </div>
 
-        <div className="mt-auto flex gap-2 border-t border-slate-100 pt-4">
+        <div className="relative z-10 mt-auto flex gap-2 border-t border-slate-100 pt-4">
           <Link
             href={`/catalog/${product.id}`}
             className="flex-1 rounded-md bg-blue-700 px-3 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-blue-800"
           >
             Ver producto
           </Link>
-          <button
-            type="button"
-            disabled
-            title="Disponible próximamente"
-            className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-xs font-medium leading-tight text-slate-500 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
-          >
-            Agregar a cotización
-          </button>
+          <AddToQuoteButton
+            product={product}
+            className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-xs font-medium leading-tight text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 sm:text-sm"
+          />
         </div>
       </div>
     </div>

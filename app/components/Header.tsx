@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { QuoteCartIndicator } from "./QuoteCartIndicator";
 
 const navLinks = [
   { href: "/", label: "Inicio" },
@@ -86,39 +87,43 @@ export function Header() {
           })}
         </nav>
 
-        <button
-          type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-md text-slate-700 md:hidden"
-          aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
-          aria-expanded={isMenuOpen}
-          onClick={() => setIsMenuOpen((open) => !open)}
-        >
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
-            fill="none"
-            aria-hidden="true"
+        <div className="flex items-center gap-1">
+          <QuoteCartIndicator />
+
+          <button
+            type="button"
+            className="flex h-10 w-10 items-center justify-center rounded-md text-slate-700 md:hidden"
+            aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
+            aria-expanded={isMenuOpen}
+            onClick={() => setIsMenuOpen((open) => !open)}
           >
-            {isMenuOpen ? (
-              <path
-                d="M5 5l12 12M17 5L5 17"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            ) : (
-              <>
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 22 22"
+              fill="none"
+              aria-hidden="true"
+            >
+              {isMenuOpen ? (
                 <path
-                  d="M3 6h16M3 11h16M3 16h16"
+                  d="M5 5l12 12M17 5L5 17"
                   stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                 />
-              </>
-            )}
-          </svg>
-        </button>
+              ) : (
+                <>
+                  <path
+                    d="M3 6h16M3 11h16M3 16h16"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </>
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
       {isMenuOpen && (

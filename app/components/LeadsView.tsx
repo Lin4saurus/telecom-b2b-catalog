@@ -46,21 +46,42 @@ export function LeadsView() {
 
     async function loadQuotes() {
       setQuotesStatus("loading");
-      const { data, error } = await supabase
-        .from("quotes")
-        .select(
-          "id, created_at, name, email, company, product_id, product_name, quantity, details, status"
-        )
-        .order("created_at", { ascending: false });
+
+      const [quotesResult, itemsResult] = await Promise.all([
+        supabase
+          .from("quotes")
+          .select(
+            "id, created_at, name, email, company, phone, country, city, project_type, product_id, product_name, quantity, details, status"
+          )
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("quote_items")
+          .select("quote_id, product_name, quantity"),
+      ]);
 
       if (isCancelled) return;
 
-      if (error) {
+      if (quotesResult.error || itemsResult.error) {
         setQuotesStatus("error");
         return;
       }
 
-      setQuotes(data ?? []);
+      const itemsByQuoteId = new Map<
+        string,
+        { productName: string; quantity: number }[]
+      >();
+      for (const item of itemsResult.data ?? []) {
+        const current = itemsByQuoteId.get(item.quote_id) ?? [];
+        current.push({ productName: item.product_name, quantity: item.quantity });
+        itemsByQuoteId.set(item.quote_id, current);
+      }
+
+      const rows: QuoteRow[] = (quotesResult.data ?? []).map((row) => ({
+        ...row,
+        items: itemsByQuoteId.get(row.id) ?? [],
+      }));
+
+      setQuotes(rows);
       setQuotesStatus("success");
     }
 

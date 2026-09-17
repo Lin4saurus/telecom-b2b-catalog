@@ -44,31 +44,57 @@ export function AdminDashboard() {
     async function load() {
       setDataStatus("loading");
 
-      const [contactsResult, quotesResult, productsResult] =
+      const [contactsResult, quotesResult, itemsResult, productsResult] =
         await Promise.all([
           supabase.from("contacts").select("id", { count: "exact", head: true }),
           supabase
             .from("quotes")
-            .select("status, product_name", { count: "exact" }),
+            .select("id, status, product_name", { count: "exact" }),
+          supabase.from("quote_items").select("quote_id, product_name"),
           getProducts(),
         ]);
 
       if (isCancelled) return;
 
-      if (contactsResult.error || quotesResult.error || productsResult.error) {
+      if (
+        contactsResult.error ||
+        quotesResult.error ||
+        itemsResult.error ||
+        productsResult.error
+      ) {
         setDataStatus("error");
         return;
       }
 
       const quoteRows = quotesResult.data ?? [];
+      const itemRows = itemsResult.data ?? [];
       const newQuotes = quoteRows.filter(
         (row) => row.status === "Nueva"
       ).length;
 
+      // Las cotizaciones "legacy" (M7-M25) guardan el producto directo en
+      // la fila de quotes; desde el M26, cada producto de una cotización
+      // vive en quote_items. Para no contar dos veces una cotización nueva
+      // (que ya no tiene product_name en su fila), solo caemos a "Cotización
+      // general" cuando la cotización no tiene ni product_name ni items.
+      const quoteIdsWithItems = new Set(itemRows.map((item) => item.quote_id));
+
       const counts = new Map<string, number>();
       for (const row of quoteRows) {
-        const label = row.product_name || "Cotización general";
-        counts.set(label, (counts.get(label) ?? 0) + 1);
+        if (row.product_name) {
+          counts.set(
+            row.product_name,
+            (counts.get(row.product_name) ?? 0) + 1
+          );
+        } else if (!quoteIdsWithItems.has(row.id)) {
+          counts.set(
+            "Cotización general",
+            (counts.get("Cotización general") ?? 0) + 1
+          );
+        }
+      }
+      for (const item of itemRows) {
+        counts.set(item.product_name, (counts.get(item.product_name) ?? 0) + 1);
       }
 
       const topProducts = Array.from(counts.entries())
