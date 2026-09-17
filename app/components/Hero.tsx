@@ -3,7 +3,7 @@ import { HeroBackgroundImage } from "./HeroBackgroundImage";
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-blue-900">
+    <section className="relative flex min-h-[420px] items-center overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-blue-900 sm:min-h-[480px] lg:min-h-[560px]">
       <div className="absolute inset-0">
         <HeroBackgroundImage />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/75 to-blue-950/50" />

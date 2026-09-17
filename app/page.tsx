@@ -6,6 +6,8 @@ import { TestimonialsCarousel } from "./components/TestimonialsCarousel";
 import { ScrollReveal } from "./components/ScrollReveal";
 import { FeaturedProducts } from "./components/FeaturedProducts";
 import { CatalogCTA } from "./components/CatalogCTA";
+import { AboutTeaser } from "./components/AboutTeaser";
+import { IndustriesTeaser } from "./components/IndustriesTeaser";
 
 // La landing pasa a ser dinámica desde el M28 porque "Productos destacados"
 // lee el catálogo real de Supabase en cada visita (mismo criterio que
@@ -17,6 +19,12 @@ export default function Home() {
     <>
       <Hero />
       <PartnersStrip />
+      <ScrollReveal>
+        <AboutTeaser />
+      </ScrollReveal>
+      <ScrollReveal>
+        <IndustriesTeaser />
+      </ScrollReveal>
       <ScrollReveal>
         <FeaturedProducts />
       </ScrollReveal>

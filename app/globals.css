@@ -17,6 +17,14 @@ body {
   color: var(--foreground);
 }
 
+/* Scroll suave para anclas internas (ej. índice de /industries y "Conocer
+   más" de /about), solo cuando el usuario no pidió menos movimiento. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 @keyframes partners-scroll {
   from {
     transform: translateX(0);
