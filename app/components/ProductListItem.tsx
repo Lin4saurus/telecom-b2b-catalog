@@ -4,6 +4,7 @@ import { ProductImage } from "./ProductImage";
 import { ProductBadge } from "./ProductBadge";
 import { ProductAvailability } from "./ProductAvailability";
 import { AddToQuoteButton } from "./AddToQuoteButton";
+import { CompareToggleButton } from "./CompareToggleButton";
 
 export function ProductListItem({ product }: { product: Product }) {
   const specEntries = Object.entries(product.specifications).slice(0, 3);
@@ -17,6 +18,10 @@ export function ProductListItem({ product }: { product: Product }) {
             className="pointer-events-none absolute left-2 top-2 z-10"
           />
         )}
+        <CompareToggleButton
+          product={product}
+          className="absolute right-2 top-2 z-10"
+        />
         <ProductImage
           src={product.image}
           alt={product.name}

@@ -13,6 +13,13 @@ export const metadata: Metadata = {
 export default async function CatalogPage() {
   const { products, error } = await getProducts();
 
+  // Se convierte en una excepción real para que la capture app/catalog/error.tsx
+  // (el mecanismo nativo de Next.js para estados de error), en vez de manejarlo
+  // acá con un mensaje inline como antes del M28.
+  if (error) {
+    throw new Error("No se pudieron obtener los productos del catálogo.");
+  }
+
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
       <div className="mb-10 max-w-2xl">
@@ -28,14 +35,7 @@ export default async function CatalogPage() {
         </p>
       </div>
 
-      {error ? (
-        <p className="rounded-md bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
-          No pudimos cargar el catálogo. Probá recargar la página en unos
-          minutos.
-        </p>
-      ) : (
-        <CatalogView products={products} />
-      )}
+      <CatalogView products={products} />
     </section>
   );
 }

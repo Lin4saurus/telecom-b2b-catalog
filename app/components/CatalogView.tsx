@@ -19,6 +19,7 @@ import { FilterBar, type SortOption } from "./FilterBar";
 import { FilterDrawer } from "./FilterDrawer";
 import { ActiveFilterChips, type ActiveFilter } from "./ActiveFilterChips";
 import type { SelectOption } from "./SelectField";
+import { EmptyState } from "./EmptyState";
 
 const ALL = "Todos";
 const PAGE_SIZE = 8;
@@ -316,19 +317,13 @@ export function CatalogView({ products }: { products: Product[] }) {
       <ActiveFilterChips filters={activeFilters} onClearAll={handleClearAll} />
 
       {sortedProducts.length === 0 ? (
-        <div className="rounded-lg border border-slate-200 bg-white px-6 py-10 text-center">
-          <p className="text-sm text-slate-500">
-            No hay productos que coincidan con la búsqueda o los filtros
-            seleccionados.
-          </p>
-          <button
-            type="button"
-            onClick={handleClearAll}
-            className="mt-4 inline-flex items-center justify-center rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-          >
-            Limpiar filtros
-          </button>
-        </div>
+        <EmptyState
+          title="No encontramos productos para esta búsqueda"
+          description="Revisá la ortografía, probá con otro término o quitá algún filtro. También podés ver el catálogo completo."
+          actions={[
+            { label: "Limpiar búsqueda y filtros", onClick: handleClearAll },
+          ]}
+        />
       ) : (
         <>
           {viewMode === "grid" ? (

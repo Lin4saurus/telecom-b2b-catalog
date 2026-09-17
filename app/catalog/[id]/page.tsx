@@ -10,6 +10,7 @@ import { ProductSpecsTable } from "../../components/ProductSpecsTable";
 import { ProductTabs, type ProductTab } from "../../components/ProductTabs";
 import { RelatedProducts } from "../../components/RelatedProducts";
 import { AddToQuoteButton } from "../../components/AddToQuoteButton";
+import { CompareToggleButton } from "../../components/CompareToggleButton";
 
 export const dynamic = "force-dynamic";
 
@@ -220,14 +221,11 @@ export default async function ProductPage({
                 product={product}
                 className="flex-1 rounded-md border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
               />
-              <button
-                type="button"
-                disabled
-                title="Disponible próximamente"
-                className="flex-1 cursor-not-allowed rounded-md border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-400"
-              >
-                Agregar a comparación
-              </button>
+              <CompareToggleButton
+                product={product}
+                variant="button"
+                className="flex-1 rounded-md border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+              />
             </div>
 
             <Link
