@@ -1,47 +1,63 @@
-# Telesev Group — Sitio B2B para mayorista de telecomunicaciones
+# Telesev Group — B2B Telecom Wholesale Website
 
-Telesev Group es un sitio corporativo pensado para un mayorista B2B de telecomunicaciones: una empresa que no le vende al consumidor final, sino a otros operadores e integradores que necesitan equipamiento de fibra óptica, redes GPON y redes ópticas en general.
+Telesev Group is a corporate website designed for a B2B telecommunications wholesaler: a company that doesn't sell to end consumers, but to other operators and integrators who need fiber optic equipment, GPON networks, and optical networking solutions.
+The problem it solves is simple but typical of the industry: a technical wholesaler needs to display their catalog clearly, convey professionalism to corporate clients, and above all convert visits into real sales opportunities — whether from someone who wants to be contacted, or someone who already knows what product they're interested in and wants a quote. The site is designed around that funnel: catalog → product → quote, with a general contact channel in parallel, and an internal panel where the sales team reviews incoming leads.
 
-El problema que resuelve es simple pero típico del rubro: un mayorista técnico necesita mostrar su catálogo de forma clara, transmitir seriedad frente a clientes corporativos, y sobre todo **convertir visitas en oportunidades de venta reales** — ya sea alguien que quiere que lo contacten, o alguien que ya sabe qué producto le interesa y quiere una cotización. El sitio está diseñado alrededor de ese embudo: catálogo → producto → cotización, con un canal de contacto general en paralelo, y un panel interno donde el equipo comercial revisa lo que va entrando.
+**Live site:** https://telecom-b2b-catalog.vercel.app
 
-**Sitio en producción:** https://telecom-b2b-catalog.vercel.app
+## 📸 Screenshots
 
-## Funcionalidades principales
+### Hero Section & Brand Partners
+Full-screen hero with background image, gradient overlay, and dual CTAs (View catalog / Request quote). Immediately below: auto-scrolling logo strip of partner brands (Kontron, Iskratel, C-Data) with CSS-only continuous carousel.
+![Hero Section and Brand Partners](screenshots/hero-landing.png)
 
-- **Catálogo con filtros** — los productos se pueden filtrar por marca (Kontron, Iskratel, C-Data) y por tecnología (GPON, redes ópticas, fibra óptica), para que un visitante técnico encuentre rápido lo que busca.
-- **Páginas de detalle por producto** — cada producto tiene su propia página con ficha comercial y técnica, generada dinámicamente a partir de una única fuente de datos.
-- **Formulario de contacto** — para consultas generales, con validación en español y confirmación clara de envío.
-- **Formulario de cotización dinámico** — si el visitante pide cotización desde un producto puntual, el formulario ya sabe de qué producto se trata (no lo tiene que tipear); también admite una cotización general sin producto asociado.
-- **Panel administrativo protegido** — el equipo de Telesev Group puede loguearse y ver las cotizaciones y contactos recibidos en un solo lugar, sin que esa información sea accesible para nadie más.
+### Product Catalog
+Searchable and filterable product grid with advanced filters (category, brand, technology, availability), active filter chips, sort options, view toggle (grid/list), and pagination. Built with state synced to the URL via the History API.
+![Product Catalog](screenshots/catalog-listing.png)
 
-## Stack tecnológico
+### Product Comparison
+Side-by-side comparison table for up to 4 products, showing unified specifications across all selected items. Differences are subtly highlighted. Responsive: horizontal scroll on mobile with a sticky first column.
+![Product Comparison](screenshots/comparacion.png)
 
-- **Next.js (App Router) + TypeScript** — rutas estáticas para el catálogo y las fichas de producto (rápidas y buenas para SEO), y rutas dinámicas donde hace falta interactividad real (formularios, panel admin).
-- **Tailwind CSS** — para mantener una identidad visual consistente (azul corporativo, tipografía y espaciados uniformes) sin escribir CSS a mano en cada componente.
-- **Supabase (Postgres + Auth)** — base de datos para guardar contactos y cotizaciones, y autenticación para proteger el panel admin, sin tener que mantener un backend propio.
-- **Vercel** — despliegue continuo: cada cambio en la rama principal se publica automáticamente.
+### Admin Dashboard
+Protected admin panel (Supabase Auth) with summary metrics (total quotes, new quotes, total contacts, catalog size) and a "Most requested products" chart. Includes full tables for quotes and contacts with status management (New / In progress / Answered / Closed), plus product CRUD.
+![Admin Dashboard](screenshots/admin-dashboard.png)
 
-## Arquitectura y decisiones de diseño
+## Main Features
 
-- **Los datos del catálogo viven en el código (`data/products.ts`), no en la base de datos.** Es un catálogo curado y estable (marcas y tecnologías del mayorista), no contenido que cambie todo el tiempo ni que necesite un panel de edición — así que tenerlo tipado en TypeScript es más simple que sumarle una tabla y una pantalla de administración solo para eso.
-- **Las tablas de `contacts` y `quotes` usan Row Level Security (RLS) de Postgres.** La clave pública del sitio (`anon key`) solo tiene permiso para *insertar* filas en esas tablas — nunca para leerlas. Esto es intencional: cualquiera puede enviar un formulario, pero nadie puede usar esa misma clave pública para husmear los contactos o cotizaciones de otros. La lectura está permitida únicamente a usuarios autenticados, que es exactamente lo que necesita el panel admin.
-- **El panel admin (`/admin`) no está enlazado desde ningún menú público.** Se accede por URL directa, valida la sesión con Supabase Auth apenas carga y, si no hay sesión, redirige al login sin llegar a pedir ni mostrar ningún dato. Es una capa de seguridad simple pero efectiva para una zona que no necesita descubrirse desde la navegación pública.
-- **Las páginas de producto se generan de forma estática** (`generateStaticParams`), porque el catálogo no cambia en tiempo real — así cargan rápido y no dependen de una consulta en cada visita.
+- **Catalog with filters** — Products can be filtered by brand (Kontron, Iskratel, C-Data) and by technology (GPON, optical networks, fiber optics), so technical visitors find what they need quickly.
+- **Product detail pages** — Each product has its own page with commercial and technical specs, dynamically generated from a single data source.
+- **Contact form** —  For general inquiries, with Spanish validation and clear submission confirmation.
+- **Dynamic quote form** — If a visitor requests a quote from a specific product, the form already knows which product it is (no need to type it); it also supports general quotes without an associated product. Multi-product quote cart included.
+- **Protected admin panel** —  The Telesev Group team can log in and view received quotes and contacts in one place, without that information being accessible to anyone else.
+## Tech Stack
 
-## Cómo correr el proyecto localmente
+- **Next.js (App Router) + TypeScript** — Static routes for the catalog and product sheets (fast and SEO-friendly), and dynamic routes where real interactivity is needed (forms, admin panel).
+- **Tailwind CSS** — To maintain a consistent visual identity (corporate blue, uniform typography and spacing) without writing CSS by hand in every component.
+- **Supabase (Postgres + Auth)** —  Database to store contacts and quotes, and authentication to protect the admin panel, without having to maintain a custom backend.
+- **Vercel** — Continuous deployment: every change to the main branch is automatically published.
 
-1. Cloná el repositorio:
+## Architecture & Design Decisions
+
+- **Catalog data lives in code (`data/products.ts`), not in the database.** It's a curated and stable catalog (brands and technologies from the wholesaler), not content that changes all the time or needs an editing panel — so having it typed in TypeScript is simpler than adding a table and an admin screen just for that.
+- **`contacts` and `quotes` tables use Postgres Row Level Security (RLS).** The site's public key (`anon key`) only has permission to insert rows into these tables — never to read them. This is intentional: anyone can submit a form, but no one can use that same public key to snoop on other people's contacts or quotes. Reading is only allowed for authenticated users, which is exactly what the admin panel needs.
+- **The admin panel (`/admin`) is not linked from any public menu.** It's accessed by direct URL, validates the session with Supabase Auth as soon as it loads, and if there's no session, redirects to login without ever requesting or showing any data. It's a simple but effective security layer for an area that doesn't need to be discoverable from public navigation.
+- **Product pages are statically generated** (`generateStaticParams`), because the catalog doesn't change in real time — so they load fast and don't depend on a query on every visit.
+
+## How to Run Locally
+
+1. Clone the repository:
    ```bash
    git clone https://github.com/Lin4saurus/telecom-b2b-catalog.git
    cd telecom-b2b-catalog
    ```
 
-2. Instalá las dependencias:
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. Creá un archivo `.env.local` en la raíz del proyecto con estas variables (los valores de Supabase se consiguen en tu propio proyecto, en *Project Settings → API*):
+3. Create a `.env.local` file in the root of the project with these variables (Supabase values are obtained from your own project, in *Project Settings → API*):
    ```
    NEXT_PUBLIC_SUPABASE_URL=
    NEXT_PUBLIC_SUPABASE_ANON_KEY=
@@ -52,16 +68,18 @@ El problema que resuelve es simple pero típico del rubro: un mayorista técnico
    QUOTE_NOTIFICATION_FROM=
    QUOTE_WEBHOOK_SECRET=
    ```
-   > Este archivo nunca se sube al repositorio (está en `.gitignore`) — cada quien usa sus propias claves.
+   > This file is never uploaded to the repository (it's in `.gitignore`) — everyone uses their own keys.
 
-4. Corré el servidor de desarrollo:
+4. Run the development server:
    ```bash
    npm run dev
    ```
-   Abrí [http://localhost:3000](http://localhost:3000).
+   Open [http://localhost:3000](http://localhost:3000).
 
-Para que el sitio funcione de punta a punta hace falta además tener, del lado de Supabase: las tablas `contacts` y `quotes` creadas, las políticas de RLS descriptas arriba, y un usuario en Authentication para poder entrar al panel admin.
+For the site to work end-to-end, you also need on the Supabase side: the `contacts` and `quotes` tables created, the RLS policies described above, and a user in Authentication to be able to access the admin panel.
 
-## Despliegue
+## Deployment
 
-El sitio se despliega automáticamente en Vercel con cada `git push` a la rama principal. Las mismas variables de entorno (`NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`) están configuradas en el proyecto de Vercel.
+The site is automatically deployed to Vercel with every `git push`  to the main branch. The same environment variables (`NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`) are configured in the Vercel project.
+
+🌐 [Read this in Spanish](README.es.md) | [Leer en español]
